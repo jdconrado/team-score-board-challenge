@@ -5,9 +5,17 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 @Component({
   selector: 'app-add-team-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   template: `
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="add-team-form">
+  @if(form) {
+    <form 
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()" 
+      class="add-team-form"
+    >
       <div class="form-group">
         <label for="name">Team Name:</label>
         <input 
@@ -16,14 +24,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
           formControlName="name"
           placeholder="Enter team name"
         >
-        <div *ngIf="form.get('name')?.errors?.['required'] && form.get('name')?.touched" 
-             class="error">
-          Team name is required
-        </div>
-        <div *ngIf="form.get('name')?.errors?.['minlength']" 
-             class="error">
-          Team name must be at least 2 characters
-        </div>
+        <!-- TODO: Display validation errors for required or minLength(2) -->
       </div>
 
       <div class="form-group">
@@ -33,14 +34,19 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
           type="number" 
           formControlName="score"
         >
-        <div *ngIf="form.get('score')?.errors?.['min']" 
-             class="error">
-          Score cannot be negative
-        </div>
+        <!-- TODO: Display validation errors for required or min(0) -->
       </div>
 
-      <button type="submit" [disabled]="!form.valid">Add Team</button>
+      <button 
+        type="submit" 
+        [disabled]="!form.valid"
+      >
+        Add Team
+      </button>
     </form>
+  } @else {
+    <h2>Team creation not enabled.</h2>
+  }
   `,
   styles: [`
     .add-team-form {
@@ -62,11 +68,6 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
       border: 1px solid #ddd;
       border-radius: 4px;
     }
-    .error {
-      color: red;
-      font-size: 0.8em;
-      margin-top: 5px;
-    }
     button {
       background: #4CAF50;
       color: white;
@@ -82,26 +83,14 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
   `]
 })
 export class AddTeamFormComponent {
-  @Output() teamCreated = new EventEmitter<{ name: string; score: number }>();
 
-  form = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2)
-    ]),
-    score: new FormControl(0, [
-      Validators.required,
-      Validators.min(0)
-    ])
-  });
+  // Emit event when a new team is created
+  @Output() teamCreated = new EventEmitter<any>();
+
+  // TODO: Initialize your form, add validators
+  form = undefined as any;
 
   onSubmit() {
-    if (this.form.valid) {
-      this.teamCreated.emit({
-        name: this.form.value.name!,
-        score: this.form.value.score!
-      });
-      this.form.reset({ name: '', score: 0 });
-    }
+    // TODO: If valid, emit the form values and reset
   }
 }

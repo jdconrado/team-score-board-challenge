@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TeamCardComponent } from './app/team-card.component';
 import { AddTeamFormComponent } from './app/add-team-form.component';
+import { TeamCardComponent } from './app/team-card.component';
 
-interface Team {
+// Replace or enhance as needed
+export interface Team {
   id: number;
   name: string;
   score: number;
@@ -14,24 +15,30 @@ interface Team {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TeamCardComponent, AddTeamFormComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AddTeamFormComponent,
+    TeamCardComponent
+  ],
   template: `
     <div class="container">
-      <h1>Team Scoreboard</h1>
-      
+      <h1>Scoreboard</h1>
+
+      <!-- Example summary placeholders -->
       <div class="summary">
-        <h2>Total Score: {{ getTotalScore() }}</h2>
-        <h3>Leading Team: {{ getLeadingTeam()?.name || 'No teams yet' }}</h3>
+        <!-- TODO: Display total score or leading team if you wish -->
+        <!-- e.g. "Total Score: {{ getTotalScore() }} (leading Team: {{TEAM}}!)" -->
+         Team's total score: {{ getTotalScore() }}
       </div>
 
-      <app-add-team-form (teamCreated)="onTeamCreated($event)"></app-add-team-form>
+      <!-- Form to add a new team -->
+      <app-add-team-form 
+        (teamCreated)="onTeamCreated($event)"
+      ></app-add-team-form>
 
       <div class="teams">
-        <app-team-card 
-          *ngFor="let team of teams" 
-          [team]="team" 
-          (scoreChange)="onScoreChanged(team.id, $event)">
-        </app-team-card>
+        <!-- Display each team as a 'team card' -->
       </div>
     </div>
   `,
@@ -55,34 +62,24 @@ interface Team {
     }
   `]
 })
-export class App {
-  teams: Team[] = [];
-  nextId = 1;
+export class ScoreboardComponent {
 
-  onTeamCreated(newTeam: { name: string; score: number }) {
-    this.teams.push({
-      id: this.nextId++,
-      ...newTeam
-    });
-  }
+  // TODO: Define way to store teams, e.g.:
+  // (Optional) track an ID counter, or generate IDs any way you prefer:
+
+  onTeamCreated(newTeamData: Omit<Team, 'id'>) {
+     // TODO: create a new Team object and push it to teams
+ }
 
   onScoreChanged(teamId: number, newScore: number) {
-    const team = this.teams.find(t => t.id === teamId);
-    if (team) {
-      team.score = newScore;
-    }
-  }
+     // TODO: find the team in 'teams' and update its score
+   }
 
   getTotalScore(): number {
-    return this.teams.reduce((sum, team) => sum + team.score, 0);
-  }
-
-  getLeadingTeam(): Team | undefined {
-    return this.teams.reduce((leader, team) => 
-      (!leader || team.score > leader.score) ? team : leader, 
-      undefined as Team | undefined
-    );
-  }
+       // TODO: sum the scores
+    return 0;
+ }
 }
 
-bootstrapApplication(App);
+// Bootstraps the standalone ScoreboardComponent
+bootstrapApplication(ScoreboardComponent);

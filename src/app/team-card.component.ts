@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="team-card">
-      <h3>{{ team.name }}</h3>
+      <h3>{{ team?.name }}</h3>
       <div class="score-controls">
-        <button (click)="updateScore(-1)" [disabled]="team.score <= 0">-</button>
-        <span class="score">{{ team.score }}</span>
+        <!-- Example for increment/decrement approach: -->
+        <button (click)="updateScore(-1)">-</button>
+        <span class="score">{{ team?.score }}</span>
         <button (click)="updateScore(1)">+</button>
       </div>
     </div>
@@ -56,13 +57,11 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class TeamCardComponent {
-  @Input() team!: { id: number; name: string; score: number };
+
+  @Input() team: { id: number; name: string; score: number } | undefined;
   @Output() scoreChange = new EventEmitter<number>();
 
   updateScore(change: number) {
-    const newScore = this.team.score + change;
-    if (newScore >= 0) {
-      this.scoreChange.emit(newScore);
-    }
+     // TODO: If valid, compute the new score & emit it:
   }
 }
