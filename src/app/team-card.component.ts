@@ -57,11 +57,13 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class TeamCardComponent {
-
-  @Input() team: { id: number; name: string; score: number } | undefined;
+  @Input() team!: { id: number; name: string; score: number };
   @Output() scoreChange = new EventEmitter<number>();
 
   updateScore(change: number) {
-     // TODO: If valid, compute the new score & emit it:
+    const newScore = this.team.score + change;
+    if (newScore >= 0) {
+      this.scoreChange.emit(newScore);
+    }
   }
 }
