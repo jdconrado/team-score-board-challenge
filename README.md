@@ -10,7 +10,7 @@ Your goal is to implement the missing pieces to meet the specifications below.
 
 ---
 
-## Requirements
+## Specifications
 
 1. **Scoreboard (Parent Component)**
    - Holds an array of `teams`, each `{ id: number; name: string; score: number }`.
